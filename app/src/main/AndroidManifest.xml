@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
+        android:name=".ApplicationPortfolio"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -13,7 +14,7 @@
         android:theme="@style/Theme.PuzzleGame"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".presentation.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.PuzzleGame">
@@ -27,9 +28,6 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-        <activity android:name="com.neobrahma.chargeup.presentation.ChargeUpActivity" />
-        <activity android:name="com.neobrahma.sudoku.presentation.SudokuActivity" />
-        <activity android:name="com.neobrahma.armada.presentation.ArmadaActivity" />
     </application>
 
 </manifest>
