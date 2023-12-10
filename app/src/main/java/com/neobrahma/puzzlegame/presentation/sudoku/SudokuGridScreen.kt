@@ -31,7 +31,7 @@ fun SudokuGridScreen(
             modifier = Modifier.align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Sudoku(uiState.sudokuCell)
+            Sudoku(uiState.list)
             Button(onClick = {
                 viewModel.clickButtonFindNextAction()
             }) {
@@ -59,7 +59,6 @@ fun Sudoku(sudokuCells: List<SudokuCell>) {
                 for (column in 0 until 3) {
                     val indexStart = (column * 3) + (row * 9 * 3)
                     Grid(indexStart, sudokuCells)
-
                 }
             }
         }
@@ -113,7 +112,7 @@ fun Possibilities(possibleValue: MutableList<Int>) {
                         text = if (value == 0) {
                             ""
                         } else {
-                            value.toString()
+                            (value * (indexValue+1)).toString()
                         },
                         fontSize = 8.sp,
                         textAlign = TextAlign.Center

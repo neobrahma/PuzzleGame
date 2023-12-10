@@ -8,7 +8,9 @@ class RefreshPossibilityByColumnUseCase : RefreshPossibilities{
         for (i in 0 until 9){
             val index = indexStart + i*9
             if(index != indexValue){
-                sudokuGrid.sudokuCell[index].possibleValue[value-1] = 0
+                if (sudokuGrid.cells[index].possibleValue.isNotEmpty()) {
+                    sudokuGrid.cells[index].possibleValue[value - 1] = 0
+                }
             }
         }
     }
