@@ -13,7 +13,15 @@ class MockDataSourceImpl @Inject constructor(
 
     override fun getSudokuList(): Flow<List<SudokuDataDomain>> {
         return flow {
-            emit(mapper.mapSudokusRepoToDomain(sudokus))
+            emit(mapper.mapSudokuGridsRepoToDomain(sudokus))
+        }
+    }
+
+    override fun getSudokuGridBy(id: Int): Flow<SudokuDataDomain> {
+        return flow{
+            sudokus.find { it.id == id }?.let{
+                emit(mapper.mapSudokuGridRepoToDomain(it))
+            }
         }
     }
 }

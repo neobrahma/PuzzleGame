@@ -13,4 +13,7 @@ class SudokuRepositoryImpl @Inject constructor(
         return dataSource.getSudokuList()
     }
 
+    override fun getSudokuGridBy(id: Int): Flow<SudokuDataDomain> {
+        return dataSource.getSudokuGridBy(id)
+    }
 }

@@ -5,4 +5,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface SudokuDataSource {
     fun getSudokuList(): Flow<List<SudokuDataDomain>>
+    fun getSudokuGridBy(id:Int): Flow<SudokuDataDomain>
 }
