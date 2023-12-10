@@ -64,9 +64,14 @@ fun Possibilities(possibleValue: MutableList<Int>) {
             Row {
                 for (index in 0 until 3) {
                     val indexValue = index + row * 3
+                    val value = possibleValue[indexValue]
                     Text(
                         modifier = Modifier.size(10.dp),
-                        text = possibleValue[indexValue].toString(),
+                        text = if (value == 0) {
+                            ""
+                        } else {
+                            value.toString()
+                        },
                         fontSize = 8.sp,
                         textAlign = TextAlign.Center
                     )

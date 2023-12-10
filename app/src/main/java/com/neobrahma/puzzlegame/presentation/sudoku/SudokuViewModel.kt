@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.neobrahma.puzzlegame.domain.sudoku.usecase.GetSudokuGridByUseCase
 import com.neobrahma.puzzlegame.domain.sudoku.usecase.GetSudokuListUseCase
+import com.neobrahma.puzzlegame.domain.sudoku.usecase.refreshpossibilities.RefreshPossibilitiesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +17,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SudokuViewModel @Inject constructor(
     getSudokuListUseCase: GetSudokuListUseCase,
-    private val getSudokuGridByUseCase: GetSudokuGridByUseCase
+    private val getSudokuGridByUseCase: GetSudokuGridByUseCase,
+    private val refreshPossibilitiesUseCase: RefreshPossibilitiesUseCase
 ) : ViewModel() {
 
     private val sudokuGrid = SudokuGrid()
@@ -31,8 +33,11 @@ class SudokuViewModel @Inject constructor(
     fun initGrid(id: Int) {
         viewModelScope.launch {
             getSudokuGridByUseCase(id).collect {
-                it.grid.forEachIndexed { index, i ->
-                    sudokuGrid.sudokuCell[index].value = i
+                it.grid.forEachIndexed { index, value ->
+                    sudokuGrid.sudokuCell[index].value = value
+                    if(value != 0){
+                        refreshPossibilitiesUseCase(sudokuGrid, index, value)
+                    }
                 }
                 _uiStateSudokuGrid.value = sudokuGrid
             }
