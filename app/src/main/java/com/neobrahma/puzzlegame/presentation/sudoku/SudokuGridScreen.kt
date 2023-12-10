@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -27,20 +28,62 @@ fun SudokuGridScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         Column(
-            modifier = Modifier.align(Alignment.Center)
-        )
-        {
-            for (row in 0 until 9) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    for (index in 0 until 9) {
-                        val indexValue = index + row * 9
-                        if (uiState.sudokuCell[indexValue].value != 0) {
-                            Value(uiState.sudokuCell[indexValue].value)
-                        } else {
-                            Possibilities(uiState.sudokuCell[indexValue].possibleValue)
-                        }
+            modifier = Modifier.align(Alignment.Center),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Sudoku(uiState.sudokuCell)
+            Button(onClick = {
+                viewModel.clickButtonFindNextAction()
+            }) {
+                Text(text = "find next action")
+            }
+        }
+
+    }
+}
+
+@Composable
+fun Sudoku(sudokuCells: List<SudokuCell>) {
+    Column(
+        modifier = Modifier.drawBehind {
+            drawRect(
+                color = Color.Blue,
+                style = Stroke(width = 4f)
+            )
+        }
+    ) {
+        for (row in 0 until 3) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                for (column in 0 until 3) {
+                    val indexStart = (column * 3) + (row * 9 * 3)
+                    Grid(indexStart, sudokuCells)
+
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun Grid(indexStart: Int, sudokuCells: List<SudokuCell>) {
+    Column(
+        modifier = Modifier.drawBehind {
+            drawRect(
+                color = Color.Blue,
+                style = Stroke(width = 4f)
+            )
+        }
+    ) {
+        for (row in 0 until 3) {
+            Row {
+                for (column in 0 until 3) {
+                    val indexValue = indexStart + column + (row * 9)
+                    if (sudokuCells[indexValue].value != 0) {
+                        Value(sudokuCells[indexValue].value)
+                    } else {
+                        Possibilities(sudokuCells[indexValue].possibleValue)
                     }
                 }
             }

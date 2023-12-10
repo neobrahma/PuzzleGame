@@ -21,7 +21,7 @@ class SudokuViewModel @Inject constructor(
     private val refreshPossibilitiesUseCase: RefreshPossibilitiesUseCase
 ) : ViewModel() {
 
-    private val sudokuGrid = SudokuGrid()
+    private var sudokuGrid = SudokuGrid()
 
     val initHome: Flow<List<String>> = getSudokuListUseCase().map {
         it.map { sudoku -> "${sudoku.id}" }
@@ -33,6 +33,7 @@ class SudokuViewModel @Inject constructor(
     fun initGrid(id: Int) {
         viewModelScope.launch {
             getSudokuGridByUseCase(id).collect {
+                sudokuGrid = SudokuGrid()
                 it.grid.forEachIndexed { index, value ->
                     sudokuGrid.sudokuCell[index].value = value
                     if(value != 0){
@@ -42,6 +43,10 @@ class SudokuViewModel @Inject constructor(
                 _uiStateSudokuGrid.value = sudokuGrid
             }
         }
+    }
+
+    fun clickButtonFindNextAction(){
+        println("tom971 find next action")
     }
 }
 
