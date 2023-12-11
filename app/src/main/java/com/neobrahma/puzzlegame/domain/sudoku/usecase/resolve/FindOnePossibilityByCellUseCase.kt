@@ -6,12 +6,12 @@ class FindOnePossibilityByCellUseCase(
     private val nextAlgo: ResolverAlgo? = null
 ) : ResolverAlgo {
     override fun invoke(sudokuGrid: SudokuGrid): ResolverAlgoResult {
-         sudokuGrid.cells.forEachIndexed loop@{ indexCell, sudokuCell ->
-            if(sudokuCell.value == 0) {
+        sudokuGrid.cells.forEachIndexed loop@{ indexCell, sudokuCell ->
+            if (sudokuCell.value == 0) {
 
                 var result = 0
                 sudokuCell.possibleValue.forEachIndexed { index, value ->
-                    if(value != 0) {
+                    if (value != 0) {
                         if (result == 0) {
                             result = value * (index + 1)
                         } else {
@@ -20,7 +20,7 @@ class FindOnePossibilityByCellUseCase(
                     }
                 }
 
-                if(result !=0) {
+                if (result != 0) {
                     return ResolverAlgoResult.FindOnePossibility(
                         text = "find one possiblity",
                         index = indexCell,
