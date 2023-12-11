@@ -6,6 +6,7 @@ import com.neobrahma.puzzlegame.domain.sudoku.usecase.GetSudokuGridByUseCase
 import com.neobrahma.puzzlegame.domain.sudoku.usecase.GetSudokuListUseCase
 import com.neobrahma.puzzlegame.domain.sudoku.usecase.refreshpossibilities.RefreshPossibilitiesUseCase
 import com.neobrahma.puzzlegame.domain.sudoku.usecase.resolve.FindOnePossibilityByCellUseCase
+import com.neobrahma.puzzlegame.domain.sudoku.usecase.resolve.FindOnePossibilityByColumnUseCase
 import com.neobrahma.puzzlegame.domain.sudoku.usecase.resolve.FindOnePossibilityByGridUseCase
 import com.neobrahma.puzzlegame.domain.sudoku.usecase.resolve.FindOnePossibilityByRowUseCase
 import com.neobrahma.puzzlegame.domain.sudoku.usecase.resolve.ResolverAlgoResult
@@ -28,11 +29,14 @@ class SudokuViewModel @Inject constructor(
 
     private var sudokuGrid = SudokuGrid()
 
-    private val findNextAction = FindOnePossibilityByCellUseCase(
-        FindOnePossibilityByGridUseCase(
-            FindOnePossibilityByRowUseCase()
+    private val findNextAction =
+        FindOnePossibilityByCellUseCase(
+            FindOnePossibilityByGridUseCase(
+                FindOnePossibilityByRowUseCase(
+                    FindOnePossibilityByColumnUseCase()
+                )
+            )
         )
-    )
 
     val initHome: Flow<List<String>> = getSudokuListUseCase().map {
         it.map { sudoku -> "${sudoku.id}" }
