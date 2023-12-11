@@ -1,4 +1,4 @@
-package com.neobrahma.puzzlegame.domain.sudoku.usecase.resolve
+package com.neobrahma.puzzlegame.domain.sudoku.usecase.resolver
 
 import com.neobrahma.puzzlegame.presentation.sudoku.SudokuGrid
 

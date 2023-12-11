@@ -5,11 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.neobrahma.puzzlegame.domain.sudoku.usecase.GetSudokuGridByUseCase
 import com.neobrahma.puzzlegame.domain.sudoku.usecase.GetSudokuListUseCase
 import com.neobrahma.puzzlegame.domain.sudoku.usecase.refreshpossibilities.RefreshPossibilitiesUseCase
-import com.neobrahma.puzzlegame.domain.sudoku.usecase.resolve.FindOnePossibilityByCellUseCase
-import com.neobrahma.puzzlegame.domain.sudoku.usecase.resolve.FindOnePossibilityByColumnUseCase
-import com.neobrahma.puzzlegame.domain.sudoku.usecase.resolve.FindOnePossibilityByGridUseCase
-import com.neobrahma.puzzlegame.domain.sudoku.usecase.resolve.FindOnePossibilityByRowUseCase
-import com.neobrahma.puzzlegame.domain.sudoku.usecase.resolve.ResolverAlgoResult
+import com.neobrahma.puzzlegame.domain.sudoku.usecase.resolver.FindOnePossibilityByCellUseCase
+import com.neobrahma.puzzlegame.domain.sudoku.usecase.resolver.FindOnePossibilityByColumnUseCase
+import com.neobrahma.puzzlegame.domain.sudoku.usecase.resolver.FindOnePossibilityByGridUseCase
+import com.neobrahma.puzzlegame.domain.sudoku.usecase.resolver.FindOnePossibilityByRowUseCase
+import com.neobrahma.puzzlegame.domain.sudoku.usecase.resolver.ResolverAlgoResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
