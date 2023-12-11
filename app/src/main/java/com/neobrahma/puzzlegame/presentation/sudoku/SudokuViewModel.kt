@@ -7,6 +7,7 @@ import com.neobrahma.puzzlegame.domain.sudoku.usecase.GetSudokuListUseCase
 import com.neobrahma.puzzlegame.domain.sudoku.usecase.refreshpossibilities.RefreshPossibilitiesUseCase
 import com.neobrahma.puzzlegame.domain.sudoku.usecase.resolve.FindOnePossibilityByCellUseCase
 import com.neobrahma.puzzlegame.domain.sudoku.usecase.resolve.FindOnePossibilityByGridUseCase
+import com.neobrahma.puzzlegame.domain.sudoku.usecase.resolve.FindOnePossibilityByRowUseCase
 import com.neobrahma.puzzlegame.domain.sudoku.usecase.resolve.ResolverAlgoResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -26,6 +27,12 @@ class SudokuViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var sudokuGrid = SudokuGrid()
+
+    private val findNextAction = FindOnePossibilityByCellUseCase(
+        FindOnePossibilityByGridUseCase(
+            FindOnePossibilityByRowUseCase()
+        )
+    )
 
     val initHome: Flow<List<String>> = getSudokuListUseCase().map {
         it.map { sudoku -> "${sudoku.id}" }
@@ -52,9 +59,6 @@ class SudokuViewModel @Inject constructor(
 
     fun clickButtonFindNextAction() {
         viewModelScope.launch(Dispatchers.IO) {
-            val findNextAction = FindOnePossibilityByCellUseCase(
-                FindOnePossibilityByGridUseCase()
-            )
             when (val result = findNextAction.invoke(sudokuGrid)) {
                 is ResolverAlgoResult.FindOnePossibility -> {
                     sudokuGrid.cells[result.index].value = result.value
