@@ -9,15 +9,16 @@ class FindOnePossibilityByColumnUseCase(
     private val nextAlgo: ResolverAlgo? = null
 ) : ResolverAlgo {
 
-    override fun invoke(sudokuGrid: SudokuGrid): ResolverAlgoResult {
-        for (indexRow in 0 until 9) {
-            val indexStart = indexRow * 9
+    override fun invoke(
+        sudokuGrid: SudokuGrid
+    ): ResolverAlgoResult {
+        for (indexColumn in 0 until 9) {
             val possibilities =
-                sudokuGrid.cells.getSumOfPossibilities(indexStart, ::getIndexInColumn)
+                sudokuGrid.cells.getSumOfPossibilities(indexColumn, ::getIndexInColumn)
             possibilities.forEachIndexed { indexPossibility, indexCell ->
                 if (indexCell > DEFAULT) {
                     return ResolverAlgoResult.FindOnePossibility(
-                        text = "find one possiblity by row",
+                        text = "find one possiblity by column",
                         index = indexCell,
                         value = indexPossibility + 1
                     )

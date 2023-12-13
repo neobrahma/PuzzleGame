@@ -69,6 +69,7 @@ class SudokuViewModel @Inject constructor(
                     sudokuGrid.cells[result.index].possibleValue.clear()
 
                     refreshPossibilitiesUseCase(sudokuGrid, result.index, result.value)
+                    println("tom971 ${result.text}")
                     _uiStateSudokuGrid.value =
                         SudokuUi("find value ${result.index} ${result.value}", sudokuGrid.cells)
                 }
