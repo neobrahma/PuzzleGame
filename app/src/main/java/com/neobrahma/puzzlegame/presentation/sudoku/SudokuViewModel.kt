@@ -28,6 +28,10 @@ class SudokuViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var sudokuGrid = SudokuGrid()
+    private var countFor = 0
+    private val visitorCountFor: CountForVisitor = {
+        countFor++
+    }
 
     private val findNextAction =
         FindOnePossibilityByCellUseCase(
@@ -47,6 +51,7 @@ class SudokuViewModel @Inject constructor(
 
     fun initGrid(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
+            countFor = 0
             getSudokuGridByUseCase(id).collect {
                 sudokuGrid = SudokuGrid()
                 it.grid.forEachIndexed { index, value ->
@@ -63,7 +68,7 @@ class SudokuViewModel @Inject constructor(
 
     fun clickButtonFindNextAction() {
         viewModelScope.launch(Dispatchers.IO) {
-            when (val result = findNextAction.invoke(sudokuGrid)) {
+            when (val result = findNextAction.invoke(sudokuGrid, visitorCountFor)) {
                 is ResolverAlgoResult.FindOnePossibility -> {
                     sudokuGrid.cells[result.index].value = result.value
                     sudokuGrid.cells[result.index].possibleValue.clear()
@@ -78,6 +83,7 @@ class SudokuViewModel @Inject constructor(
                     println("tom971 aucun algo")
                 }
             }
+            println("tom971 nombre de boucle total effectué $countFor")
         }
     }
 }
@@ -95,3 +101,5 @@ data class SudokuCell(
     var value: Int = 0,
     val possibleValue: MutableList<Int> = MutableList(9) { 1 }
 )
+
+typealias CountForVisitor = () -> Unit

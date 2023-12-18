@@ -3,6 +3,7 @@ package com.neobrahma.puzzlegame.domain.sudoku.usecase.resolver
 import com.neobrahma.puzzlegame.domain.sudoku.usecase.DEFAULT
 import com.neobrahma.puzzlegame.domain.sudoku.usecase.getIndexInColumn
 import com.neobrahma.puzzlegame.domain.sudoku.usecase.getSumOfPossibilities
+import com.neobrahma.puzzlegame.presentation.sudoku.CountForVisitor
 import com.neobrahma.puzzlegame.presentation.sudoku.SudokuGrid
 
 class FindOnePossibilityByColumnUseCase(
@@ -10,9 +11,10 @@ class FindOnePossibilityByColumnUseCase(
 ) : ResolverAlgo {
 
     override fun invoke(
-        sudokuGrid: SudokuGrid
+        sudokuGrid: SudokuGrid, countFor : CountForVisitor
     ): ResolverAlgoResult {
         for (indexColumn in 0 until 9) {
+            countFor.invoke()
             val possibilities =
                 sudokuGrid.cells.getSumOfPossibilities(indexColumn, ::getIndexInColumn)
             possibilities.forEachIndexed { indexPossibility, indexCell ->
@@ -26,7 +28,7 @@ class FindOnePossibilityByColumnUseCase(
             }
         }
 
-        return nextAlgo?.invoke(sudokuGrid) ?: ResolverAlgoResult.Nothing
+        return nextAlgo?.invoke(sudokuGrid, countFor) ?: ResolverAlgoResult.Nothing
     }
 
 }

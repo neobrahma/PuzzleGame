@@ -1,12 +1,14 @@
 package com.neobrahma.puzzlegame.domain.sudoku.usecase.resolver
 
+import com.neobrahma.puzzlegame.presentation.sudoku.CountForVisitor
 import com.neobrahma.puzzlegame.presentation.sudoku.SudokuGrid
 
 class FindOnePossibilityByCellUseCase(
     private val nextAlgo: ResolverAlgo? = null
 ) : ResolverAlgo {
-    override fun invoke(sudokuGrid: SudokuGrid): ResolverAlgoResult {
+    override fun invoke(sudokuGrid: SudokuGrid, countFor : CountForVisitor): ResolverAlgoResult {
         sudokuGrid.cells.forEachIndexed loop@{ indexCell, sudokuCell ->
+            countFor.invoke()
             if (sudokuCell.value == 0) {
 
                 var result = 0
@@ -29,6 +31,6 @@ class FindOnePossibilityByCellUseCase(
                 }
             }
         }
-        return nextAlgo?.invoke(sudokuGrid) ?: ResolverAlgoResult.Nothing
+        return nextAlgo?.invoke(sudokuGrid, countFor) ?: ResolverAlgoResult.Nothing
     }
 }
