@@ -4,7 +4,7 @@ import com.neobrahma.puzzlegame.domain.sudoku.usecase.DEFAULT
 import com.neobrahma.puzzlegame.domain.sudoku.usecase.getIndexInRow
 import com.neobrahma.puzzlegame.domain.sudoku.usecase.getSumOfPossibilities
 import com.neobrahma.puzzlegame.presentation.sudoku.FindOnePossibilityVisitor
-import com.neobrahma.puzzlegame.presentation.sudoku.SudokuData
+import com.neobrahma.puzzlegame.presentation.sudoku.model.SudokuData
 
 class RefreshPossibilityByRowUseCase : RefreshPossibilities {
     override fun invoke(

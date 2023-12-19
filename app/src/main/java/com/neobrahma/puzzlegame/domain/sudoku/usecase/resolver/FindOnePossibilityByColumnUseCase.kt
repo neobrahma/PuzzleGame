@@ -4,14 +4,14 @@ import com.neobrahma.puzzlegame.domain.sudoku.usecase.DEFAULT
 import com.neobrahma.puzzlegame.domain.sudoku.usecase.getIndexInColumn
 import com.neobrahma.puzzlegame.domain.sudoku.usecase.getSumOfPossibilities
 import com.neobrahma.puzzlegame.presentation.sudoku.CountForVisitor
-import com.neobrahma.puzzlegame.presentation.sudoku.SudokuData
+import com.neobrahma.puzzlegame.presentation.sudoku.model.SudokuData
 
 class FindOnePossibilityByColumnUseCase(
-    private val nextAlgo: ResolverAlgo? = null
-) : ResolverAlgo {
+    private val nextAlgo: ResolverAlgoUseCase? = null
+) : ResolverAlgoUseCase {
 
     override fun invoke(
-        sudokuData: SudokuData, countFor : CountForVisitor
+        sudokuData: SudokuData, countFor: CountForVisitor
     ): ResolverAlgoResult {
         for (indexColumn in 0 until 9) {
             countFor.invoke()

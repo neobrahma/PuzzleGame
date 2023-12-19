@@ -1,6 +1,6 @@
 package com.neobrahma.puzzlegame.domain.sudoku.usecase
 
-import com.neobrahma.puzzlegame.presentation.sudoku.CellData
+import com.neobrahma.puzzlegame.presentation.sudoku.model.CellData
 
 const val DEFAULT = -1
 const val MORE_THAN_ONE_POSSIBILITY = -2

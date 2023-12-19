@@ -1,4 +1,4 @@
-package com.neobrahma.puzzlegame.presentation.sudoku
+package com.neobrahma.puzzlegame.presentation.sudoku.ui
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.neobrahma.puzzlegame.presentation.navigation.SudokuGridDestination
+import com.neobrahma.puzzlegame.presentation.sudoku.SudokuViewModel
 
 @Composable
 fun SudokuHomepageScreen(

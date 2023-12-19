@@ -6,8 +6,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.neobrahma.puzzlegame.presentation.homepage.HomepageScreen
-import com.neobrahma.puzzlegame.presentation.sudoku.SudokuGridScreen
-import com.neobrahma.puzzlegame.presentation.sudoku.SudokuHomepageScreen
+import com.neobrahma.puzzlegame.presentation.sudoku.ui.SudokuGridScreen
+import com.neobrahma.puzzlegame.presentation.sudoku.ui.SudokuHomepageScreen
 import com.neobrahma.puzzlegame.presentation.sudoku.SudokuViewModel
 
 @Composable

@@ -1,7 +1,7 @@
 package com.neobrahma.puzzlegame.domain.sudoku.usecase.refreshpossibilities
 
 import com.neobrahma.puzzlegame.presentation.sudoku.FindOnePossibilityVisitor
-import com.neobrahma.puzzlegame.presentation.sudoku.SudokuData
+import com.neobrahma.puzzlegame.presentation.sudoku.model.SudokuData
 import javax.inject.Inject
 
 class RefreshPossibilitiesUseCase @Inject constructor() : RefreshPossibilities {

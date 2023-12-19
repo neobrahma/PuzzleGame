@@ -6,7 +6,7 @@ import com.neobrahma.puzzlegame.domain.sudoku.usecase.getIndexGridY
 import com.neobrahma.puzzlegame.domain.sudoku.usecase.getIndexInGrid
 import com.neobrahma.puzzlegame.domain.sudoku.usecase.getSumOfPossibilities
 import com.neobrahma.puzzlegame.presentation.sudoku.FindOnePossibilityVisitor
-import com.neobrahma.puzzlegame.presentation.sudoku.SudokuData
+import com.neobrahma.puzzlegame.presentation.sudoku.model.SudokuData
 
 class RefreshPossibilityByGridUseCase : RefreshPossibilities {
     override fun invoke(

@@ -1,4 +1,4 @@
-package com.neobrahma.puzzlegame.presentation.sudoku
+package com.neobrahma.puzzlegame.presentation.sudoku.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +18,8 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.neobrahma.puzzlegame.presentation.sudoku.SudokuViewModel
+import com.neobrahma.puzzlegame.presentation.sudoku.ui.model.CellUi
 
 @Composable
 fun SudokuGridScreen(
@@ -79,9 +81,9 @@ fun Grid(indexStart: Int, sudoku: List<CellUi>) {
             Row {
                 for (column in 0 until 3) {
                     val indexValue = indexStart + column + (row * 9)
-                    when(val cellUi = sudoku[indexValue]){
-                        is CellUi.Possibilities -> Possibilities(cellUi.list)
-                        is CellUi.Value -> Value(value = cellUi.value)
+                    when (val cellUi = sudoku[indexValue]) {
+                        is CellUi.PossibilitiesUI -> Possibilities(cellUi.list)
+                        is CellUi.ValueUI -> Value(value = cellUi.value)
                     }
                 }
             }
@@ -111,7 +113,7 @@ fun Possibilities(possibleValue: List<Int>) {
                         text = if (value == 0) {
                             ""
                         } else {
-                            (value * (indexValue+1)).toString()
+                            (value * (indexValue + 1)).toString()
                         },
                         fontSize = 8.sp,
                         textAlign = TextAlign.Center
