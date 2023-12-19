@@ -40,3 +40,7 @@ fun getIndexInGrid(indexStartInGrid: Int, index: Int): Int {
     val indexRow = index / 3
     return indexStartInGrid + (index % 3) + (indexRow * 9)
 }
+
+fun getIndexGridX(index : Int) = (index % 9) / 3
+
+fun getIndexGridY(index : Int) = (index / 9) / 3

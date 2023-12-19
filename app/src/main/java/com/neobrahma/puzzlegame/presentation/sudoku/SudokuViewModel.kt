@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import java.util.LinkedList
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,9 +29,20 @@ class SudokuViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var sudokuGrid = SudokuGrid()
+
     private var countFor = 0
+
+    private val linkedList: LinkedList<OneSolution> = LinkedList()
+
     private val visitorCountFor: CountForVisitor = {
         countFor++
+    }
+
+    private val findOnePossibilityVisitor: FindOnePossibilityVisitor = { indexCell, value ->
+        val oneSolution = OneSolution(indexCell, value)
+        if (!linkedList.contains(oneSolution)) {
+            linkedList.add(oneSolution)
+        }
     }
 
     private val findNextAction =
@@ -58,32 +70,61 @@ class SudokuViewModel @Inject constructor(
                     sudokuGrid.cells[index].value = value
                     if (value != 0) {
                         sudokuGrid.cells[index].possibleValue.clear()
-                        refreshPossibilitiesUseCase(sudokuGrid, index, value)
+                        refreshPossibilitiesUseCase(
+                            sudokuGrid,
+                            index,
+                            value,
+                            findOnePossibilityVisitor
+                        )
                     }
                 }
                 _uiStateSudokuGrid.value = SudokuUi("init sudoku", sudokuGrid.cells)
             }
+
+            dequeueList()
         }
     }
 
     fun clickButtonFindNextAction() {
-        viewModelScope.launch(Dispatchers.IO) {
-            when (val result = findNextAction.invoke(sudokuGrid, visitorCountFor)) {
-                is ResolverAlgoResult.FindOnePossibility -> {
-                    sudokuGrid.cells[result.index].value = result.value
-                    sudokuGrid.cells[result.index].possibleValue.clear()
+        when (val result = findNextAction.invoke(sudokuGrid, visitorCountFor)) {
+            is ResolverAlgoResult.FindOnePossibility -> {
+                sudokuGrid.cells[result.index].value = result.value
+                sudokuGrid.cells[result.index].possibleValue.clear()
 
-                    refreshPossibilitiesUseCase(sudokuGrid, result.index, result.value)
-                    println("tom971 ${result.text}")
-                    _uiStateSudokuGrid.value =
-                        SudokuUi("find value ${result.index} ${result.value}", sudokuGrid.cells)
-                }
-
-                ResolverAlgoResult.Nothing -> {
-                    println("tom971 aucun algo")
-                }
+                refreshPossibilitiesUseCase(
+                    sudokuGrid,
+                    result.index,
+                    result.value,
+                    findOnePossibilityVisitor
+                )
+                println("tom971 ${result.text}")
+                _uiStateSudokuGrid.value =
+                    SudokuUi("find value ${result.index} ${result.value}", sudokuGrid.cells)
             }
-            println("tom971 nombre de boucle total effectué $countFor")
+
+            ResolverAlgoResult.Nothing -> {
+                println("tom971 aucun algo")
+            }
+        }
+        println("tom971 nombre de boucle total effectué $countFor")
+    }
+
+    private fun dequeueList() {
+        while (linkedList.isNotEmpty()) {
+            val oneSolution = linkedList.removeFirst()
+            if (sudokuGrid.cells[oneSolution.indexCell].value == 0) {
+                sudokuGrid.cells[oneSolution.indexCell].value = oneSolution.value
+                refreshPossibilitiesUseCase(
+                    sudokuGrid,
+                    oneSolution.indexCell,
+                    oneSolution.value,
+                    findOnePossibilityVisitor
+                )
+                _uiStateSudokuGrid.value = SudokuUi(
+                    "one solution ${oneSolution.indexCell} ${oneSolution.value}",
+                    sudokuGrid.cells
+                )
+            }
         }
     }
 }
@@ -102,4 +143,10 @@ data class SudokuCell(
     val possibleValue: MutableList<Int> = MutableList(9) { 1 }
 )
 
+data class OneSolution(
+    val indexCell: Int,
+    val value: Int
+)
+
 typealias CountForVisitor = () -> Unit
+typealias FindOnePossibilityVisitor = (Int, Int) -> Unit
