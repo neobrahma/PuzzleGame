@@ -1,7 +1,7 @@
 package com.neobrahma.puzzlegame.domain.sudoku.usecase.refreshpossibilities
 
 import com.neobrahma.puzzlegame.presentation.sudoku.FindOnePossibilityVisitor
-import com.neobrahma.puzzlegame.presentation.sudoku.SudokuGrid
+import com.neobrahma.puzzlegame.presentation.sudoku.SudokuData
 import javax.inject.Inject
 
 class RefreshPossibilitiesUseCase @Inject constructor() : RefreshPossibilities {
@@ -12,13 +12,13 @@ class RefreshPossibilitiesUseCase @Inject constructor() : RefreshPossibilities {
     )
 
     override fun invoke(
-        sudokuGrid: SudokuGrid,
+        sudokuData: SudokuData,
         indexValue: Int,
         value: Int,
         findOnePossibilityVisitor: FindOnePossibilityVisitor
     ) {
         refreshPossibilitiesAlgo.forEach {
-            it.invoke(sudokuGrid, indexValue, value, findOnePossibilityVisitor)
+            it.invoke(sudokuData, indexValue, value, findOnePossibilityVisitor)
         }
     }
 }

@@ -31,7 +31,7 @@ fun SudokuGridScreen(
             modifier = Modifier.align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Sudoku(uiState.list)
+            Sudoku(uiState.sudoku)
             Button(onClick = {
                 viewModel.clickButtonFindNextAction()
             }) {
@@ -43,7 +43,7 @@ fun SudokuGridScreen(
 }
 
 @Composable
-fun Sudoku(sudokuCells: List<SudokuCell>) {
+fun Sudoku(sudoku: List<CellUi>) {
     Column(
         modifier = Modifier.drawBehind {
             drawRect(
@@ -58,7 +58,7 @@ fun Sudoku(sudokuCells: List<SudokuCell>) {
             ) {
                 for (column in 0 until 3) {
                     val indexStart = (column * 3) + (row * 9 * 3)
-                    Grid(indexStart, sudokuCells)
+                    Grid(indexStart, sudoku)
                 }
             }
         }
@@ -66,7 +66,7 @@ fun Sudoku(sudokuCells: List<SudokuCell>) {
 }
 
 @Composable
-fun Grid(indexStart: Int, sudokuCells: List<SudokuCell>) {
+fun Grid(indexStart: Int, sudoku: List<CellUi>) {
     Column(
         modifier = Modifier.drawBehind {
             drawRect(
@@ -79,10 +79,9 @@ fun Grid(indexStart: Int, sudokuCells: List<SudokuCell>) {
             Row {
                 for (column in 0 until 3) {
                     val indexValue = indexStart + column + (row * 9)
-                    if (sudokuCells[indexValue].value != 0) {
-                        Value(sudokuCells[indexValue].value)
-                    } else {
-                        Possibilities(sudokuCells[indexValue].possibleValue)
+                    when(val cellUi = sudoku[indexValue]){
+                        is CellUi.Possibilities -> Possibilities(cellUi.list)
+                        is CellUi.Value -> Value(value = cellUi.value)
                     }
                 }
             }
@@ -91,7 +90,7 @@ fun Grid(indexStart: Int, sudokuCells: List<SudokuCell>) {
 }
 
 @Composable
-fun Possibilities(possibleValue: MutableList<Int>) {
+fun Possibilities(possibleValue: List<Int>) {
     Column(
         modifier = Modifier
             .size(30.dp)

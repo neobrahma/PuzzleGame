@@ -1,10 +1,10 @@
 package com.neobrahma.puzzlegame.domain.sudoku.usecase.resolver
 
 import com.neobrahma.puzzlegame.presentation.sudoku.CountForVisitor
-import com.neobrahma.puzzlegame.presentation.sudoku.SudokuGrid
+import com.neobrahma.puzzlegame.presentation.sudoku.SudokuData
 
 interface ResolverAlgo {
-    operator fun invoke(sudokuGrid: SudokuGrid, countFor : CountForVisitor): ResolverAlgoResult
+    operator fun invoke(sudokuData: SudokuData, countFor : CountForVisitor): ResolverAlgoResult
 }
 
 sealed class ResolverAlgoResult {

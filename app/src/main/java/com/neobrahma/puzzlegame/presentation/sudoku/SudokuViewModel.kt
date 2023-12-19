@@ -26,22 +26,23 @@ class SudokuViewModel @Inject constructor(
     getSudokuListUseCase: GetSudokuListUseCase,
     private val getSudokuGridByUseCase: GetSudokuGridByUseCase,
     private val refreshPossibilitiesUseCase: RefreshPossibilitiesUseCase,
+    private val mapperUI: SudokuUIMapper
 ) : ViewModel() {
 
-    private var sudokuGrid = SudokuGrid()
+    private var sudokuData = SudokuData()
 
     private var countFor = 0
 
-    private val linkedList: LinkedList<OneSolution> = LinkedList()
+    private val linkedList: LinkedList<OneSolutionData> = LinkedList()
 
     private val visitorCountFor: CountForVisitor = {
         countFor++
     }
 
     private val findOnePossibilityVisitor: FindOnePossibilityVisitor = { indexCell, value ->
-        val oneSolution = OneSolution(indexCell, value)
-        if (!linkedList.contains(oneSolution)) {
-            linkedList.add(oneSolution)
+        val oneSolutionData = OneSolutionData(indexCell, value)
+        if (!linkedList.contains(oneSolutionData)) {
+            linkedList.add(oneSolutionData)
         }
     }
 
@@ -58,27 +59,27 @@ class SudokuViewModel @Inject constructor(
         it.map { sudoku -> "${sudoku.id}" }
     }
 
-    private val _uiStateSudokuGrid = MutableStateFlow(SudokuUi("empty sudoku", SudokuGrid().cells))
-    val uiStateSudokuGrid: StateFlow<SudokuUi> = _uiStateSudokuGrid.asStateFlow()
+    private val _uiStateSudokuData = MutableStateFlow(SudokuUi("empty sudoku", mapperUI.mapGrid(SudokuData().cells)))
+    val uiStateSudokuGrid: StateFlow<SudokuUi> = _uiStateSudokuData.asStateFlow()
 
     fun initGrid(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             countFor = 0
             getSudokuGridByUseCase(id).collect {
-                sudokuGrid = SudokuGrid()
+                sudokuData = SudokuData()
                 it.grid.forEachIndexed { index, value ->
-                    sudokuGrid.cells[index].value = value
+                    sudokuData.cells[index].value = value
                     if (value != 0) {
-                        sudokuGrid.cells[index].possibleValue.clear()
+                        sudokuData.cells[index].possibleValue.clear()
                         refreshPossibilitiesUseCase(
-                            sudokuGrid,
+                            sudokuData,
                             index,
                             value,
                             findOnePossibilityVisitor
                         )
                     }
                 }
-                _uiStateSudokuGrid.value = SudokuUi("init sudoku", sudokuGrid.cells)
+                _uiStateSudokuData.value = SudokuUi("init sudoku", mapperUI.mapGrid(sudokuData.cells))
             }
 
             dequeueList()
@@ -86,20 +87,20 @@ class SudokuViewModel @Inject constructor(
     }
 
     fun clickButtonFindNextAction() {
-        when (val result = findNextAction.invoke(sudokuGrid, visitorCountFor)) {
+        when (val result = findNextAction.invoke(sudokuData, visitorCountFor)) {
             is ResolverAlgoResult.FindOnePossibility -> {
-                sudokuGrid.cells[result.index].value = result.value
-                sudokuGrid.cells[result.index].possibleValue.clear()
+                sudokuData.cells[result.index].value = result.value
+                sudokuData.cells[result.index].possibleValue.clear()
 
                 refreshPossibilitiesUseCase(
-                    sudokuGrid,
+                    sudokuData,
                     result.index,
                     result.value,
                     findOnePossibilityVisitor
                 )
                 println("tom971 ${result.text}")
-                _uiStateSudokuGrid.value =
-                    SudokuUi("find value ${result.index} ${result.value}", sudokuGrid.cells)
+                _uiStateSudokuData.value =
+                    SudokuUi("find value ${result.index} ${result.value}", mapperUI.mapGrid(sudokuData.cells))
             }
 
             ResolverAlgoResult.Nothing -> {
@@ -112,17 +113,17 @@ class SudokuViewModel @Inject constructor(
     private fun dequeueList() {
         while (linkedList.isNotEmpty()) {
             val oneSolution = linkedList.removeFirst()
-            if (sudokuGrid.cells[oneSolution.indexCell].value == 0) {
-                sudokuGrid.cells[oneSolution.indexCell].value = oneSolution.value
+            if (sudokuData.cells[oneSolution.indexCell].value == 0) {
+                sudokuData.cells[oneSolution.indexCell].value = oneSolution.value
                 refreshPossibilitiesUseCase(
-                    sudokuGrid,
+                    sudokuData,
                     oneSolution.indexCell,
                     oneSolution.value,
                     findOnePossibilityVisitor
                 )
-                _uiStateSudokuGrid.value = SudokuUi(
+                _uiStateSudokuData.value = SudokuUi(
                     "one solution ${oneSolution.indexCell} ${oneSolution.value}",
-                    sudokuGrid.cells
+                    mapperUI.mapGrid(sudokuData.cells)
                 )
             }
         }
@@ -131,19 +132,24 @@ class SudokuViewModel @Inject constructor(
 
 data class SudokuUi(
     val text: String,
-    val list: List<SudokuCell>
+    val sudoku: List<CellUi>
 )
 
-data class SudokuGrid(
-    val cells: List<SudokuCell> = List(81) { SudokuCell() }
+sealed class CellUi{
+    class Value(val value : Int): CellUi()
+    class Possibilities(val list: List<Int>): CellUi()
+}
+
+data class SudokuData(
+    val cells: List<CellData> = List(81) { CellData() }
 )
 
-data class SudokuCell(
+data class CellData(
     var value: Int = 0,
     val possibleValue: MutableList<Int> = MutableList(9) { 1 }
 )
 
-data class OneSolution(
+data class OneSolutionData(
     val indexCell: Int,
     val value: Int
 )

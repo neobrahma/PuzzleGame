@@ -1,11 +1,11 @@
 package com.neobrahma.puzzlegame.domain.sudoku.usecase
 
-import com.neobrahma.puzzlegame.presentation.sudoku.SudokuCell
+import com.neobrahma.puzzlegame.presentation.sudoku.CellData
 
 const val DEFAULT = -1
 const val MORE_THAN_ONE_POSSIBILITY = -2
 
-fun List<SudokuCell>.getSumOfPossibilities(
+fun List<CellData>.getSumOfPossibilities(
     indexStart: Int,
     getIndexCell: (Int, Int) -> Int
 ): List<Int> {

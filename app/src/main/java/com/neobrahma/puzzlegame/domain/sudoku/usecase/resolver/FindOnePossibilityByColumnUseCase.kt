@@ -4,19 +4,19 @@ import com.neobrahma.puzzlegame.domain.sudoku.usecase.DEFAULT
 import com.neobrahma.puzzlegame.domain.sudoku.usecase.getIndexInColumn
 import com.neobrahma.puzzlegame.domain.sudoku.usecase.getSumOfPossibilities
 import com.neobrahma.puzzlegame.presentation.sudoku.CountForVisitor
-import com.neobrahma.puzzlegame.presentation.sudoku.SudokuGrid
+import com.neobrahma.puzzlegame.presentation.sudoku.SudokuData
 
 class FindOnePossibilityByColumnUseCase(
     private val nextAlgo: ResolverAlgo? = null
 ) : ResolverAlgo {
 
     override fun invoke(
-        sudokuGrid: SudokuGrid, countFor : CountForVisitor
+        sudokuData: SudokuData, countFor : CountForVisitor
     ): ResolverAlgoResult {
         for (indexColumn in 0 until 9) {
             countFor.invoke()
             val possibilities =
-                sudokuGrid.cells.getSumOfPossibilities(indexColumn, ::getIndexInColumn)
+                sudokuData.cells.getSumOfPossibilities(indexColumn, ::getIndexInColumn)
             possibilities.forEachIndexed { indexPossibility, indexCell ->
                 if (indexCell > DEFAULT) {
                     return ResolverAlgoResult.FindOnePossibility(
@@ -28,7 +28,7 @@ class FindOnePossibilityByColumnUseCase(
             }
         }
 
-        return nextAlgo?.invoke(sudokuGrid, countFor) ?: ResolverAlgoResult.Nothing
+        return nextAlgo?.invoke(sudokuData, countFor) ?: ResolverAlgoResult.Nothing
     }
 
 }

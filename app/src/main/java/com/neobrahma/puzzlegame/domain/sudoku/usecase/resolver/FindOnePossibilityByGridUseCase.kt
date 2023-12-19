@@ -4,17 +4,17 @@ import com.neobrahma.puzzlegame.domain.sudoku.usecase.DEFAULT
 import com.neobrahma.puzzlegame.domain.sudoku.usecase.getIndexInGrid
 import com.neobrahma.puzzlegame.domain.sudoku.usecase.getSumOfPossibilities
 import com.neobrahma.puzzlegame.presentation.sudoku.CountForVisitor
-import com.neobrahma.puzzlegame.presentation.sudoku.SudokuGrid
+import com.neobrahma.puzzlegame.presentation.sudoku.SudokuData
 
 class FindOnePossibilityByGridUseCase(
     private val nextAlgo: ResolverAlgo? = null
 ) : ResolverAlgo {
 
-    override fun invoke(sudokuGrid: SudokuGrid, countFor : CountForVisitor): ResolverAlgoResult {
+    override fun invoke(sudokuData: SudokuData, countFor : CountForVisitor): ResolverAlgoResult {
         for (indexGrid in 0 until 9) {
             countFor.invoke()
             val indexStart = ((indexGrid % 3) * 3) + ((indexGrid / 3) * (3 * 9))
-            val possibilities = sudokuGrid.cells.getSumOfPossibilities(indexStart, ::getIndexInGrid)
+            val possibilities = sudokuData.cells.getSumOfPossibilities(indexStart, ::getIndexInGrid)
             possibilities.forEachIndexed { indexPossibility, indexCell ->
                 if (indexCell > DEFAULT) {
                     return ResolverAlgoResult.FindOnePossibility(
@@ -26,7 +26,7 @@ class FindOnePossibilityByGridUseCase(
             }
         }
 
-        return nextAlgo?.invoke(sudokuGrid, countFor) ?: ResolverAlgoResult.Nothing
+        return nextAlgo?.invoke(sudokuData, countFor) ?: ResolverAlgoResult.Nothing
     }
 
 }

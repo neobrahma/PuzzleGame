@@ -6,11 +6,11 @@ import com.neobrahma.puzzlegame.domain.sudoku.usecase.getIndexGridY
 import com.neobrahma.puzzlegame.domain.sudoku.usecase.getIndexInGrid
 import com.neobrahma.puzzlegame.domain.sudoku.usecase.getSumOfPossibilities
 import com.neobrahma.puzzlegame.presentation.sudoku.FindOnePossibilityVisitor
-import com.neobrahma.puzzlegame.presentation.sudoku.SudokuGrid
+import com.neobrahma.puzzlegame.presentation.sudoku.SudokuData
 
 class RefreshPossibilityByGridUseCase : RefreshPossibilities {
     override fun invoke(
-        sudokuGrid: SudokuGrid,
+        sudokuData: SudokuData,
         indexValue: Int,
         value: Int,
         findOnePossibilityVisitor: FindOnePossibilityVisitor
@@ -21,7 +21,7 @@ class RefreshPossibilityByGridUseCase : RefreshPossibilities {
         for (i in 0 until 9) {
             val index = getIndexInGrid(indexStart, i)
             if (index != indexValue) {
-                with(sudokuGrid.cells[index].possibleValue) {
+                with(sudokuData.cells[index].possibleValue) {
                     if (this.isNotEmpty()) {
                         this[value - 1] = 0
                     }
@@ -29,7 +29,7 @@ class RefreshPossibilityByGridUseCase : RefreshPossibilities {
             }
         }
 
-        val possibilities = sudokuGrid.cells.getSumOfPossibilities(indexStart, ::getIndexInGrid)
+        val possibilities = sudokuData.cells.getSumOfPossibilities(indexStart, ::getIndexInGrid)
         possibilities.forEachIndexed { indexPossibility, indexCell ->
             if (indexCell > DEFAULT) {
                 findOnePossibilityVisitor(indexCell, indexPossibility + 1)
