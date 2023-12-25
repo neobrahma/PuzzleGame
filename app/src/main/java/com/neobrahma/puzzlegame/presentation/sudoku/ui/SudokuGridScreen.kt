@@ -92,7 +92,7 @@ fun Grid(indexStart: Int, sudoku: List<CellUi>) {
 }
 
 @Composable
-fun Possibilities(possibleValue: List<Int>) {
+fun Possibilities(possibleValue: List<String>) {
     Column(
         modifier = Modifier
             .size(30.dp)
@@ -107,14 +107,9 @@ fun Possibilities(possibleValue: List<Int>) {
             Row {
                 for (index in 0 until 3) {
                     val indexValue = index + row * 3
-                    val value = possibleValue[indexValue]
                     Text(
                         modifier = Modifier.size(10.dp),
-                        text = if (value == 0) {
-                            ""
-                        } else {
-                            (value * (indexValue + 1)).toString()
-                        },
+                        text = possibleValue[indexValue],
                         fontSize = 8.sp,
                         textAlign = TextAlign.Center
                     )
@@ -125,7 +120,7 @@ fun Possibilities(possibleValue: List<Int>) {
 }
 
 @Composable
-fun Value(value: Int) {
+fun Value(value: String) {
     Box(
         modifier = Modifier
             .size(30.dp)
@@ -138,7 +133,7 @@ fun Value(value: Int) {
     ) {
         Text(
             modifier = Modifier.align(Alignment.Center),
-            text = value.toString(),
+            text = value,
             textAlign = TextAlign.Center
         )
 

@@ -9,9 +9,14 @@ class SudokuUIMapper @Inject constructor() {
     fun mapGrid(list: List<CellData>): List<CellUi> {
         return list.map {
             if (it.value == 0) {
-                CellUi.PossibilitiesUI(it.possibleValue.toList())
+                CellUi.PossibilitiesUI(it.possibleValue.mapIndexed { index, value ->
+                    when(value){
+                        0 -> ""
+                        else -> (value * (index + 1)).toString()
+                    }
+                })
             } else {
-                CellUi.ValueUI(it.value)
+                CellUi.ValueUI(it.value.toString())
             }
         }
     }
