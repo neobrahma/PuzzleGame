@@ -4,10 +4,16 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -23,24 +29,22 @@ import com.neobrahma.puzzlegame.presentation.sudoku.ui.model.CellUi
 
 @Composable
 fun SudokuGridScreen(
-    viewModel: SudokuViewModel
+    viewModel: SudokuViewModel,
 ) {
     val uiState by viewModel.uiStateSudokuGrid.collectAsState()
-    Box(
-        modifier = Modifier.fillMaxSize()
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(4.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
-            modifier = Modifier.align(Alignment.Center),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Sudoku(uiState.sudoku)
-            Button(onClick = {
-                viewModel.clickButtonFindNextAction()
-            }) {
-                Text(text = "find next action")
-            }
+        Sudoku(uiState.sudoku)
+        Button(onClick = {
+            viewModel.clickButtonFindNextAction()
+        }) {
+            Text(text = "find next action")
         }
-
+        ActionsList(uiState.list)
     }
 }
 
@@ -137,5 +141,21 @@ fun Value(value: String) {
             textAlign = TextAlign.Center
         )
 
+    }
+}
+
+@Composable
+fun ActionsList(actions: List<String>) {
+    val chatListState = rememberLazyListState()
+    LazyColumn(
+        modifier = Modifier.fillMaxWidth(),
+        state = chatListState
+    ) {
+        items(actions) {
+            Text(text = it)
+        }
+    }
+    LaunchedEffect(actions.size) {
+        chatListState.animateScrollToItem(chatListState.layoutInfo.totalItemsCount)
     }
 }

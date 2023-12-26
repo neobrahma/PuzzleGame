@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.neobrahma.puzzlegame.domain.sudoku.usecase.GetSudokuGridByUseCase
 import com.neobrahma.puzzlegame.domain.sudoku.usecase.GetSudokuListUseCase
 import com.neobrahma.puzzlegame.domain.sudoku.usecase.refreshpossibilities.RefreshPossibilitiesUseCase
-import com.neobrahma.puzzlegame.domain.sudoku.usecase.resolver.ResolverAlgoUseCase
 import com.neobrahma.puzzlegame.domain.sudoku.usecase.resolver.ResolverAlgoResult
+import com.neobrahma.puzzlegame.domain.sudoku.usecase.resolver.ResolverAlgoUseCase
 import com.neobrahma.puzzlegame.presentation.sudoku.model.OneSolutionData
 import com.neobrahma.puzzlegame.presentation.sudoku.model.SudokuData
 import com.neobrahma.puzzlegame.presentation.sudoku.ui.model.SudokuUi
@@ -26,16 +26,17 @@ class SudokuViewModel @Inject constructor(
     getSudokuListUseCase: GetSudokuListUseCase,
     private val getSudokuGridByUseCase: GetSudokuGridByUseCase,
     private val refreshPossibilitiesUseCase: RefreshPossibilitiesUseCase,
-    private val findNextAction : ResolverAlgoUseCase,
+    private val findNextAction: ResolverAlgoUseCase,
     private val mapperUI: SudokuUIMapper
 ) : ViewModel() {
 
     private var sudokuData = SudokuData()
 
-    private var countFor = 0
-
     private val linkedList: LinkedList<OneSolutionData> = LinkedList()
 
+    private val listAction: MutableList<String> = mutableListOf()
+
+    private var countFor = 0
     private val visitorCountFor: CountForVisitor = {
         countFor++
     }
@@ -52,7 +53,7 @@ class SudokuViewModel @Inject constructor(
     }
 
     private val _uiStateSudokuData =
-        MutableStateFlow(SudokuUi("empty sudoku", mapperUI.mapGrid(SudokuData().cells)))
+        MutableStateFlow(SudokuUi("empty sudoku", listOf(), mapperUI.mapGrid(SudokuData().cells)))
     val uiStateSudokuGrid: StateFlow<SudokuUi> = _uiStateSudokuData.asStateFlow()
 
     fun initGrid(id: Int) {
@@ -72,8 +73,9 @@ class SudokuViewModel @Inject constructor(
                         )
                     }
                 }
+                listAction.add("init sudoku")
                 _uiStateSudokuData.value =
-                    SudokuUi("init sudoku", mapperUI.mapGrid(sudokuData.cells))
+                    SudokuUi("init sudoku",listAction, mapperUI.mapGrid(sudokuData.cells))
             }
 //            dequeueList()
         }
@@ -91,10 +93,12 @@ class SudokuViewModel @Inject constructor(
                     result.value,
                     findOnePossibilityVisitor
                 )
-                println("tom971 ${result.text}")
+
+                listAction.add("${result.text} ${result.index} ${result.value}")
                 _uiStateSudokuData.value =
                     SudokuUi(
                         "find value ${result.index} ${result.value}",
+                        listAction,
                         mapperUI.mapGrid(sudokuData.cells)
                     )
             }
@@ -117,8 +121,10 @@ class SudokuViewModel @Inject constructor(
                     oneSolution.value,
                     findOnePossibilityVisitor
                 )
+                listAction.add("one solution ${oneSolution.indexCell} ${oneSolution.value}")
                 _uiStateSudokuData.value = SudokuUi(
                     "one solution ${oneSolution.indexCell} ${oneSolution.value}",
+                    listAction,
                     mapperUI.mapGrid(sudokuData.cells)
                 )
             }
